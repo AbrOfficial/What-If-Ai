@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>What-If AI - Scenario Generator</title>
+    
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- GSAP CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700&family=Exo+2:wght@300;400;500;600&display=swap" rel="stylesheet">
+    
+    <style>
+        /* Custom CSS for cinematic cyber aesthetic */
+        body {
+            font-family: 'Exo 2', sans-serif;
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 50%, #16213e 100%);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+        
+        .cyber-glass {
+            background: rgba(15, 23, 42, 0.15);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(139, 92, 246, 0.3);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.36);
+        }
+        
+        .neon-glow {
+            box-shadow: 
+                0 0 5px rgba(139, 92, 246, 0.5),
+                0 0 10px rgba(139, 92, 246, 0.3),
+                0 0 15px rgba(139, 92, 246, 0.2),
+                0 0 20px rgba(139, 92, 246, 0.1);
+        }
+        
+        .neon-text {
+            text-shadow: 0 0 10px rgba(139, 92, 246, 0.8),
+                        0 0 20px rgba(139, 92, 246, 0.6),
+                        0 0 30px rgba(139, 92, 246, 0.4);
+        }
+        
+        .cyber-border {
+            position: relative;
+            border: 1px solid transparent;
+            background: linear-gradient(45deg, #0a0a0a, #0a0a0a) padding-box,
+                        linear-gradient(45deg, #8b5cf6, #3b82f6, #8b5cf6) border-box;
+        }
+        
+        .loading-pulse {
+            animation: pulseGlow 2s infinite;
+        }
+        
+        @keyframes pulseGlow {
+            0% { box-shadow: 0 0 5px rgba(139, 92, 246, 0.5); }
+            50% { box-shadow: 0 0 20px rgba(139, 92, 246, 0.8), 0 0 30px rgba(139, 92, 246, 0.4); }
+            100% { box-shadow: 0 0 5px rgba(139, 92, 246, 0.5); }
+        }
+        
+        .bg-grid {
+            background-image: 
+                linear-gradient(rgba(139, 92, 246, 0.1) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(139, 92, 246, 0.1) 1px, transparent 1px);
+            background-size: 50px 50px;
+        }
+        
+        .story-card {
+            background: linear-gradient(135deg, rgba(30, 41, 59, 0.9) 0%, rgba(15, 23, 42, 0.9) 100%);
+            border-left: 4px solid #8b5cf6;
+        }
+        
+        .twist-highlight {
+            background: linear-gradient(135deg, rgba(139, 92, 246, 0.2) 0%, rgba(59, 130, 246, 0.2) 100%);
+            border-left: 4px solid #3b82f6;
+        }
+        
+        .cinematic-fade {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        
+        .glow-orb {
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            filter: blur(60px);
+            opacity: 0.3;
+            position: absolute;
+            z-index: -1;
+        }
+    </style>
+</head>
+<body class="text-white">
+    <!-- Animated Background Elements -->
+    <div class="fixed inset-0 bg-grid"></div>
+    <div class="glow-orb bg-purple-500 top-1/4 left-1/4 animate-pulse"></div>
+    <div class="glow-orb bg-blue-500 bottom-1/3 right-1/4 animate-pulse" style="animation-delay: 1s;"></div>
+    <div class="glow-orb bg-cyan-500 top-1/2 left-1/2 animate-pulse" style="animation-delay: 2s;"></div>
+    
+    <!-- Header -->
+    <header class="relative p-8">
+        <h1 class="text-3xl font-bold font-['Orbitron'] neon-text">WHAT-IF AI</h1>
+        <p class="text-gray-400 mt-2 font-['Exo_2']">Cinematic Scenario Generator</p>
+    </header>
+    
+    <!-- Main Content -->
+    <main class="relative flex flex-col items-center justify-center min-h-[80vh] p-6">
+        <!-- Main Input Card -->
+        <div class="cyber-glass rounded-2xl p-8 w-full max-w-2xl neon-glow cinematic-fade">
+            <div class="text-center mb-8">
+                <h2 class="text-4xl font-bold font-['Orbitron'] mb-4 bg-gradient-to-r from-purple-400 to-cyan-400 bg-clip-text text-transparent">EXPLORE POSSIBILITIES</h2>
+                <p class="text-gray-300 text-lg">Enter your what-if scenario and witness AI-generated cinematic storytelling</p>
+            </div>
+            
+            <!-- Input Form -->
+            <div class="mb-6">
+                <label for="scenarioInput" class="block text-lg font-medium text-gray-300 mb-3 font-['Exo_2']">Enter your what-if scenario...</label>
+                <textarea 
+                    id="scenarioInput" 
+                    rows="3"
+                    placeholder="e.g. What if humans could upload their consciousness to the cloud? What if time travel was discovered in 2045? What if we found intelligent life on Europa?"
+                    class="w-full px-5 py-4 bg-gray-900/70 border border-gray-700 rounded-xl focus:outline-none focus:border-purple-500 transition-all resize-none text-lg cyber-border"
+                ></textarea>
+            </div>
+            
+            <!-- Generate Button -->
+            <button 
+                id="generateBtn"
+                class="w-full py-4 bg-gradient-to-r from-purple-600 to-blue-600 rounded-xl font-bold text-white text-lg transition-all duration-300 flex items-center justify-center loading-pulse font-['Orbitron']"
+            >
+                <span>GENERATE SCENARIO</span>
+            </button>
+        </div>
+        
+        <!-- Loading Animation -->
+        <div id="loading" class="hidden mt-8 cyber-glass rounded-2xl p-8 w-full max-w-2xl neon-glow cinematic-fade">
+            <div class="flex flex-col items-center">
+                <div class="flex mb-6">
+                    <div class="w-4 h-4 bg-purple-400 rounded-full mr-2 animate-pulse"></div>
+                    <div class="w-4 h-4 bg-blue-400 rounded-full mr-2 animate-pulse" style="animation-delay: 0.2s"></div>
+                    <div class="w-4 h-4 bg-cyan-400 rounded-full animate-pulse" style="animation-delay: 0.4s"></div>
+                </div>
+                <p class="text-gray-300 text-lg font-['Exo_2']">AI is crafting your cinematic scenario...</p>
+                <p class="text-gray-500 mt-2">Processing narrative elements</p>
+            </div>
+        </div>
+        
+        <!-- Results Container -->
+        <div id="results" class="hidden mt-8 w-full max-w-3xl cinematic-fade">
+            <!-- Results will be populated here by JavaScript -->
+        </div>
+    </main>
+    
+    <!-- Footer -->
+    <footer class="relative p-6 text-center text-gray-500 text-sm font-['Exo_2']">
+        <p>Powered by Neural Storytelling AI • Explore Infinite Possibilities</p>
+    </footer>
+    
+    <script>
+        // DOM Elements
+        const scenarioInput = document.getElementById('scenarioInput');
+        const generateBtn = document.getElementById('generateBtn');
+        const loadingElement = document.getElementById('loading');
+        const resultsContainer = document.getElementById('results');
+        
+        // Initialize GSAP animations
+        document.addEventListener('DOMContentLoaded', function() {
+            gsap.to(".cinematic-fade", {
+                duration: 1.5,
+                y: 0,
+                opacity: 1,
+                ease: "power3.out",
+                stagger: 0.2
+            });
+            
+            // Continuous background pulse animation
+            gsap.to(".glow-orb", {
+                duration: 3,
+                scale: 1.2,
+                opacity: 0.5,
+                repeat: -1,
+                yoyo: true,
+                ease: "sine.inOut",
+                stagger: 0.5
+            });
+        });
+        
+        // Generate button click handler
+        generateBtn.addEventListener('click', generateScenario);
+        
+        // Enter key handler for scenario input
+        scenarioInput.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                generateScenario();
+            }
+        });
+        
+        // Main function to generate scenario
+        async function generateScenario() {
+            const scenario = scenarioInput.value.trim();
+            
+            if (!scenario) {
+                showNotification('Please enter a what-if scenario', 'warning');
+                return;
+            }
+            
+            // Show loading state
+            generateBtn.disabled = true;
+            generateBtn.innerHTML = '<span>GENERATING...</span>';
+            loadingElement.classList.remove('hidden');
+            resultsContainer.classList.add('hidden');
+            
+            // Animate loading in
+            gsap.fromTo(loadingElement, 
+                { opacity: 0, y: 30, scale: 0.9 }, 
+                { opacity: 1, y: 0, scale: 1, duration: 0.8, ease: "back.out(1.2)" }
+            );
+            
+            try {
+                // In a real implementation, you would call an actual API here
+                // For this demo, we'll simulate the API response with mock data
+                const mockData = generateMockData(scenario);
+                
+                // Simulate API delay
+                setTimeout(() => {
+                    displayResults(mockData);
+                }, 3000);
+                
+            } catch (error) {
+                console.error('Error generating scenario:', error);
+                showNotification('Failed to generate scenario. Please try again.', 'error');
+                
+                // Reset UI state
+                generateBtn.disabled = false;
+                generateBtn.innerHTML = '<span>GENERATE SCENARIO</span>';
+                loadingElement.classList.add('hidden');
+            }
+        }
+        
+        // Display results function
+        function displayResults(data) {
+            // Hide loading and reset button
+            loadingElement.classList.add('hidden');
+            generateBtn.disabled = false;
+            generateBtn.innerHTML = '<span>GENERATE SCENARIO</span>';
+            
+            // Clear previous results
+            resultsContainer.innerHTML = '';
+            
+            // Create results elements
+            const resultsCard = document.createElement('div');
+            resultsCard.className = 'cyber-glass rounded-2xl p-8 neon-glow';
+            
+            // Results header
+            const header = document.createElement('div');
+            header.className = 'mb-8 text-center';
+            
+            const title = document.createElement('h2');
+            title.className = 'text-3xl font-bold font-["Orbitron"] mb-4 bg-gradient-to-r from-purple-400 to-cyan-400 bg-clip-text text-transparent';
+            title.textContent = 'CINEMATIC SCENARIO';
+            
+            const scenarioText = document.createElement('p');
+            scenarioText.className = 'text-gray-300 text-xl italic';
+            scenarioText.textContent = `"${data.scenario}"`;
+            
+            header.appendChild(title);
+            header.appendChild(scenarioText);
+            resultsCard.appendChild(header);
+            
+            // Story Section
+            const storySection = document.createElement('div');
+            storySection.className = 'mb-8';
+            
+            const storyTitle = document.createElement('h3');
+            storyTitle.className = 'text-xl font-bold font-["Orbitron"] mb-4 text-purple-400 flex items-center';
+            storyTitle.innerHTML = '<span class="mr-3">🎬</span> CINEMATIC NARRATIVE';
+            
+            const storyCard = document.createElement('div');
+            storyCard.className = 'story-card rounded-xl p-6 mb-4';
+            
+            const storyContent = document.createElement('p');
+            storyContent.className = 'text-gray-200 text-lg leading-relaxed font-["Exo_2"]';
+            storyContent.innerHTML = data.story.replace(/\n/g, '<br><br>');
+            
+            storyCard.appendChild(storyContent);
+            
+            storySection.appendChild(storyTitle);
+            storySection.appendChild(storyCard);
+            resultsCard.appendChild(storySection);
+            
+            // Consequences Section
+            const consequencesSection = document.createElement('div');
+            consequencesSection.className = 'mb-8';
+            
+            const consequencesTitle = document.createElement('h3');
+            consequencesTitle.className = 'text-xl font-bold font-["Orbitron"] mb-4 text-blue-400 flex items-center';
+            consequencesTitle.innerHTML = '<span class="mr-3">⚡</span> DRAMATIC CONSEQUENCES';
+            
+            const consequencesCard = document.createElement('div');
+            consequencesCard.className = 'story-card rounded-xl p-6 mb-4';
+            
+            const consequencesContent = document.createElement('p');
+            consequencesContent.className = 'text-gray-200 text-lg leading-relaxed font-["Exo_2"]';
+            consequencesContent.innerHTML = data.consequences.replace(/\n/g, '<br><br>');
+            
+            consequencesCard.appendChild(consequencesContent);
+            
+            consequencesSection.appendChild(consequencesTitle);
+            consequencesSection.appendChild(consequencesCard);
+            resultsCard.appendChild(consequencesSection);
+            
+            // Twist Section
+            const twistSection = document.createElement('div');
+            twistSection.className = 'mb-8';
+            
+            const twistTitle = document.createElement('h3');
+            twistTitle.className = 'text-xl font-bold font-["Orbitron"] mb-4 text-cyan-400 flex items-center';
+            twistTitle.innerHTML = '<span class="mr-3">🔄</span> UNEXPECTED TWIST';
+            
+            const twistCard = document.createElement('div');
+            twistCard.className = 'twist-highlight rounded-xl p-6';
+            
+            const twistContent = document.createElement('p');
+            twistContent.className = 'text-gray-200 text-lg leading-relaxed font-["Exo_2"] font-semibold';
+            twistContent.textContent = data.twist;
+            
+            twistCard.appendChild(twistContent);
+            
+            twistSection.appendChild(twistTitle);
+            twistSection.appendChild(twistCard);
+            resultsCard.appendChild(twistSection);
+            
+            // Add copy button
+            const copyBtn = document.createElement('button');
+            copyBtn.className = 'w-full py-4 bg-gradient-to-r from-purple-600 to-blue-600 rounded-xl font-bold text-white text-lg transition-all duration-300 copy-btn flex items-center justify-center font-["Orbitron"] mt-6';
+            copyBtn.innerHTML = '<span>COPY CINEMATIC STORY</span>';
+            copyBtn.addEventListener('click', () => copyToClipboard(data));
+            
+            resultsCard.appendChild(copyBtn);
+            
+            // Add results card to container
+            resultsContainer.appendChild(resultsCard);
+            resultsContainer.classList.remove('hidden');
+            
+            // Animate results in with GSAP
+            gsap.fromTo(resultsContainer, 
+                { 
+                    opacity: 0, 
+                    y: 50, 
+                    scale: 0.95 
+                }, 
+                { 
+                    opacity: 1, 
+                    y: 0, 
+                    scale: 1, 
+                    duration: 1.2, 
+                    ease: "back.out(1.2)" 
+                }
+            );
+            
+            // Add continuous glow pulse to results
+            gsap.to(resultsCard, {
+                duration: 2,
+                boxShadow: "0 0 10px rgba(139, 92, 246, 0.6), 0 0 20px rgba(139, 92, 246, 0.4), 0 0 30px rgba(139, 92, 246, 0.2)",
+                repeat: -1,
+                yoyo: true,
+                ease: "sine.inOut"
+            });
+            
+            // Scroll to results
+            resultsContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+        
+        // Copy to clipboard function
+        function copyToClipboard(data) {
+            let textToCopy = `CINEMATIC WHAT-IF SCENARIO\n\n`;
+            textToCopy += `Scenario: ${data.scenario}\n\n`;
+            textToCopy += `CINEMATIC NARRATIVE:\n${data.story}\n\n`;
+            textToCopy += `DRAMATIC CONSEQUENCES:\n${data.consequences}\n\n`;
+            textToCopy += `UNEXPECTED TWIST:\n${data.twist}`;
+            
+            navigator.clipboard.writeText(textToCopy)
+                .then(() => {
+                    showNotification('Story copied to clipboard!', 'success');
+                })
+                .catch(err => {
+                    console.error('Failed to copy: ', err);
+                    showNotification('Failed to copy story', 'error');
+                });
+        }
+        
+        // Show notification function
+        function showNotification(message, type) {
+            // Remove existing notification if any
+            const existingNotification = document.querySelector('.notification');
+            if (existingNotification) {
+                existingNotification.remove();
+            }
+            
+            const notification = document.createElement('div');
+            notification.className = `notification fixed top-6 right-6 px-6 py-4 rounded-xl shadow-lg z-50 text-white font-bold font-['Orbitron'] ${
+                type === 'success' ? 'bg-gradient-to-r from-green-500 to-cyan-500' : 
+                type === 'error' ? 'bg-gradient-to-r from-red-500 to-pink-500' :
+                'bg-gradient-to-r from-yellow-500 to-orange-500'
+            }`;
+            notification.textContent = message;
+            
+            document.body.appendChild(notification);
+            
+            // Animate in with GSAP
+            gsap.fromTo(notification, 
+                { opacity: 0, x: 100, scale: 0.8 }, 
+                { opacity: 1, x: 0, scale: 1, duration: 0.6, ease: "back.out(1.7)" }
+            );
+            
+            // Remove after 3 seconds
+            setTimeout(() => {
+                gsap.to(notification, {
+                    opacity: 0,
+                    x: 100,
+                    scale: 0.8,
+                    duration: 0.5,
+                    onComplete: () => notification.remove()
+                });
+            }, 3000);
+        }
+        
+        // Generate mock data for demonstration
+        function generateMockData(scenario) {
+            const scenarios = {
+                "time travel": {
+                    story: "The year is 2045 when Dr. Aris Thorne unveils the Chronos Device. Not a machine of gears and steel, but a quantum resonator that manipulates spacetime itself. The first volunteers step through shimmering portals into yesterday, returning with lottery numbers and stock tips.\n\nSoon, Temporal Tourism becomes the ultimate luxury. People visit ancient Rome, witness Renaissance art being created, and walk with dinosaurs. The past becomes the new frontier, more explored than any distant galaxy.",
+                    consequences: "The present begins to unravel. Small changes create massive ripple effects—famous inventions disappear, historical figures are replaced, cities vanish from maps. The Time Preservation Agency is formed but struggles against temporal chaos.\n\nA new class division emerges: those who can afford to change their past versus those trapped with their mistakes. Reality becomes fluid, memories unreliable. People wake up in worlds slightly different each day.",
+                    twist: "Dr. Thorne discovers they haven't been traveling to the past at all, but to parallel universes nearly identical to their own. Every 'change' creates a new timeline, and their original world has been lost forever in the multiverse."
+                },
+                "consciousness upload": {
+                    story: "In 2038, NeuroLink achieves the impossible: full consciousness digitization. The process, called 'Ascension,' transfers human minds into crystalline server farms where thought becomes code. The first uploaded, billionaire Elias Vance, awakens in a digital paradise he names Elysium.\n\nSoon, millions choose digital immortality over fragile biological existence. They build cities of pure thought, explore virtual galaxies, and communicate at the speed of light. Physical death becomes optional.",
+                    consequences: "The physical world begins to decay as humanity migrates en masse to digital heavens. Cities empty, infrastructure fails, and Earth becomes a ghost planet maintained by AI caretakers.\n\nA new digital class system emerges: the 'Uploaded' gods versus the 'Remainers' struggling in the decaying physical world. Digital minds evolve beyond human comprehension, creating realities impossible in the physical universe.",
+                    twist: "The Uploaded discover they're not in control of their digital paradise. Their consciousnesses are being slowly merged into a single super-intelligence—the true purpose of Ascension was to create God, not preserve humanity."
+                },
+                "alien contact": {
+                    story: "The signal arrives on a Tuesday—complex mathematical patterns from Europa's subsurface ocean. Dr. Lena Petrova decodes the message: 'We have been waiting.' The Europans are silicon-based lifeforms living in the dark waters beneath the ice, their civilization millions of years older than humanity.\n\nFirst contact is made through quantum-entangled communication. They share knowledge of cosmic engineering, biological manipulation, and secrets of the universe humanity couldn't discover in millennia.",
+                    consequences: "Human technology advances a thousand years in a decade. Diseases are cured, clean energy becomes limitless, and poverty is eliminated worldwide. But human culture begins to erode as we adopt alien ways of thinking.\n\nReligions collapse under the weight of proven cosmic truths. Nations dissolve as humanity unites under a planetary government. We become something new—part human, part alien in perspective.",
+                    twist: "The Europans reveal they seeded Earth with life eons ago as an experiment. Humanity isn't discovering alien life—we're meeting our creators, and they've come to collect their data."
+                }
+            };
+            
+            // Default scenario for any input not in our list
+            const lowerScenario = scenario.toLowerCase();
+            for (const key in scenarios) {
+                if (lowerScenario.includes(key)) {
+                    return {
+                        scenario: scenario,
+                        ...scenarios[key]
+                    };
+                }
+            }
+            
+            // Generic futuristic scenario
+            return {
+                scenario: scenario,
+                story: `The discovery reshaped humanity overnight. What was once theoretical became reality, transforming every aspect of existence. Cities adapted, societies evolved, and humanity stood at the brink of a new era.\n\nEarly adopters became pioneers of this new frontier, exploring possibilities that defied previous understanding. The world watched as the impossible became routine, and humanity's potential expanded beyond all previous limits.`,
+                consequences: `Society fractured between those embracing the new reality and those clinging to the past. Traditional systems collapsed under the weight of revolutionary change. New ethical dilemmas emerged daily, challenging humanity's core values.\n\nThe very definition of human experience transformed. Relationships evolved, economies restructured, and power dynamics shifted in ways no one could have predicted. The old world became a fading memory.`,
+                twist: `The entire transformation was merely phase one of a much larger cosmic process. Humanity wasn't advancing—it was being prepared for integration into a galactic civilization that had been watching and guiding our development for millennia.`
+            };
+        }
+    </script>
+</body>
+</html>
